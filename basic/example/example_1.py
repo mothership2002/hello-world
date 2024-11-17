@@ -61,4 +61,4 @@ under_line()
 print(fibonacci(10))
 under_line()
 
-print(calculate_scores(["Alice", "Bob", "Charlie"], [85, 90, 88]))
+calculate_scores(["Alice", "Bob", "Charlie"], [85, 90, 88])

@@ -1,15 +1,14 @@
-from .elemental import *
 from basic.Utils import under_line
+from .elemental import *
+from .elemental.subject import Subject
+
 
 class Student:
-    def __init__(self, name: str, age: int, gender: Gender,
-                 korean: Korean, english: English, math: Math):
-        self.name = name
-        self.age = age
-        self.gender = gender
-        self.korean = korean
-        self.english = english
-        self.math = math
+    def __init__(self, name: str, age: int, person_gender: Gender, *subjects: Subject):
+        self._name = name
+        self._age = age
+        self._gender = person_gender
+        self._subject = {_subject.subject_name: _subject.score for _subject in subjects}
 
     def __str__(self):
         return " / ".join(f"{field} : {value}" for field, value in vars(self).items())
@@ -18,3 +17,19 @@ class Student:
         for field, value in vars(self).items():
             print(f"{field} : {value} ")
         under_line()
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def age(self):
+        return self._age
+
+    @property
+    def gender(self):
+        return self._gender.value
+
+    @property
+    def subject(self):
+        return self._subject

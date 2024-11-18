@@ -1,4 +1,8 @@
 class Subject:
+
+    subject_name = None
+    score = None
+
     def __init__(self, name: str, score: int):
         self.subject_name = name
         self.score = score

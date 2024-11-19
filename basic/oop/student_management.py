@@ -16,3 +16,7 @@ report.add(hello, world)
 kim = construct_student("kim", 33, Gender.FEMALE, 100, 100, 0)
 report.add(kim)
 print(report.get("hello"))
+print(report.average('Korean'))
+print(report.average_all())
+print(report.top_score('English'))
+

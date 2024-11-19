@@ -8,7 +8,7 @@ class Student:
         self._name = name
         self._age = age
         self._gender = person_gender
-        self._subject = {_subject.subject_name: _subject.score for _subject in subjects}
+        self._subjects = {_subject.subject_name: _subject.score for _subject in subjects}
 
     def __str__(self):
         return " / ".join(f"{field} : {value}" for field, value in vars(self).items())
@@ -31,5 +31,5 @@ class Student:
         return self._gender.value
 
     @property
-    def subject(self):
-        return self._subject
+    def subjects(self):
+        return self._subjects

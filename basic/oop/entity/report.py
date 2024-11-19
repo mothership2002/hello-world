@@ -14,8 +14,8 @@ def _initialize_subject_top_score() -> Tuple[Dict[Type[Subject], Dict[str, int]]
 
 
 class Report:
-    _NAME = 'name'
-    _SCORE = 'score'
+    KEY_NAME = 'name'
+    KEY_SCORE = 'score'
 
     """
     Report class / student rank report
@@ -23,24 +23,40 @@ class Report:
 
     # ========== private =========== #
     def __init__(self):
-        self.students: Dict[str, Student] = {}
+        self._students: Dict[str, Student] = {}
         self._top_score, self._subject_list = _initialize_subject_top_score()
         self._average: int = 0
-        print(self._top_score)
-        print(self._subject_list)
     # ========== private end =========== #
 
     def add(self, *students: Student) -> None:
+        new_top_scores, subjects = _initialize_subject_top_score()
         for student in students:
-            self.students[student.name] = student
+            self._students[student.name] = student
 
-        # student.
+            for subject in student.subjects:
+                if subject not in self._subject_list:
+                    raise KeyError(f"Subject '{subject}' does not exit")
 
-        # if self._korean_top['score']: int <
-        # 여기서 탑친구들 뽑고, 부가적인걸 하면되겟찌?
+                subject_top_score = new_top_scores[subjects[subject]]
+                student_score = student.subjects[subject]
+
+                if subject_top_score[self.KEY_SCORE] < student_score:
+                    subject_top_score[self.KEY_SCORE] = student_score
+                    subject_top_score[self.KEY_NAME] = student.name
+
+        for subject in new_top_scores:
+            if self._top_score[subject][self.KEY_SCORE] < new_top_scores[subject][self.KEY_SCORE]:
+                self._top_score[subject] = new_top_scores[subject]
 
     def get(self, name: str) -> Student:
-        return self.students[name]
+        if name not in self._students:
+            raise KeyError(f"Student with name '{name}' does not exit")
+        return self._students[name]
 
     def get_top_score(self, subject: str) -> Dict[str, int]:
+        if subject not in self._subject_list:
+            raise KeyError(f"Subject '{subject}' does not exit")
         return self._top_score[self._subject_list[subject]]
+
+
+# 에러처리도 메서드로 빼버릴까.?

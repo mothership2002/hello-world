@@ -1,4 +1,4 @@
-from typing import Dict, Type, Tuple
+from typing import Dict, Type, Tuple, Any
 
 from oop.entity.elemental.subject import *
 from oop.entity.student import Student
@@ -77,16 +77,16 @@ class Report:
             raise KeyError(f"Student with name '{name}' does not exist")
         return self._students[name]
 
-    def top_score(self, subject: str) -> Dict[str, int]:
-        if subject not in self._subject_list:
+    def top_score(self, subject: str) -> Dict[str, Dict[str, int]]:
+        if subject.capitalize() not in self._subject_list:
             raise KeyError(f"Subject '{subject}' does not exist")
-        return self._top_score[self._subject_list[subject]]
+        return {subject.capitalize(): self._top_score[self._subject_list[subject.capitalize()]]}
 
     def top_score_all(self) -> Dict[Type[Subject], Dict[str, int]]:
         return self._top_score
 
-    def average(self, subject: str) -> float:
-        return self._average[subject]
+    def average(self, subject: str) -> Dict[Any, Dict[str, float]]:
+        return {subject.capitalize() : self._average[subject.capitalize()]}
 
     def average_all(self) -> Dict[str, float]:
         return self._average

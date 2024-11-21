@@ -24,3 +24,8 @@ class Math(Subject):
 class English(Subject):
     def __init__(self, score: int):
         super().__init__("English", score)
+
+
+class Chinese(Subject):
+    def __init__(self, score):
+        super().__init__("Chinese", score)

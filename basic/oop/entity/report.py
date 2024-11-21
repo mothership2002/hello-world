@@ -16,7 +16,7 @@ class Report:
     def __init__(self):
         self._students: Dict[str, Student] = {}
         self._top_score, self._subject_list = self._initialize_subject_top_score()
-        # self._average: Dict[str, float] = {subject.__name__: 0.0 for subject in Subject.__subclasses__()}
+        self._average: Dict[str, float] = {subject.__name__: 0.0 for subject in Subject.__subclasses__()}
 
     def _initialize_subject_top_score(self) -> Tuple[Dict[Type[Subject], Dict[str, int]], Dict[str, Type[Subject]]]:
         top_score = {}
@@ -40,26 +40,23 @@ class Report:
             subject_top_score[self.KEY_SCORE] = student_score
             subject_top_score[self.KEY_NAME] = student.name
 
-    def _calculation(self):
-        self._get_average()
+    def _calculation(self, before_student_count: int, new_total_score: Dict[str, int]):
+        self._get_average(before_student_count, new_total_score)
 
-    def _get_average(self):
-        # 부동 소수점 문제 -> 알고리즘 최적화하기가 어려울 것 같음
-        self._students_count = len(self._students)
-        average = {subject: 0.0 for subject in self._subject_list}
-        for subject in average:
-            for student in self._students:
-                average[subject] += self._students[student].subjects[subject]
+    def _get_average(self, before_student_count: int, new_total_score: Dict[str, int]):
+        for subject in new_total_score:
+            self._average[subject] = (self._average[subject] * before_student_count + new_total_score[subject]) / len(self._students)
 
-            average[subject] /= self._students_count
-
-        self._average = average
-
+            # 부동 소수점 문제를 해결하기 위한.
+            # self._average[subject] = (Decimal(self._average[subject]) * Decimal(before_student_count)
+            #                           + Decimal(new_total_score[subject])) / Decimal(len(self._students))
 
     # ========== private end =========== #
 
     def add(self, *students: Student) -> None:
         new_top_scores, subjects = self._initialize_subject_top_score()
+        before_student_count = len(self._students)
+        new_total_score: Dict[str, int] = {subject.__name__: 0 for subject in Subject.__subclasses__()}
         for student in students:
             self._students[student.name] = student
 
@@ -67,9 +64,10 @@ class Report:
                 if subject not in self._subject_list:
                     raise KeyError(f"Subject '{subject}' does not exist")
                 self._switching_new_top(new_top_scores, subjects, subject, student)
+                new_total_score[subject] += student.subjects[subject]
 
         self._switching_top(new_top_scores)
-        self._calculation()
+        self._calculation(before_student_count, new_total_score)
 
 
     def get(self, name: str) -> Student:
